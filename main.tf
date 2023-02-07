@@ -1,19 +1,24 @@
 // Define el provider de AWS
 provider "aws" {
-  region = "us-east-1"
+  region = local.region
+}
+
+locals {
+  region = "eu-east-1"
+  ami = var.ubuntu_ami [local.region]
 }
 
 //Data source para las AZ
 data "aws_subnet" "az_a" {
-  availability_zone = "us-east-1a"
+  availability_zone = "${local.region}a"
 }
 data "aws_subnet" "az_b" {
-  availability_zone = "us-east-1b"
+  availability_zone = "${local.region}b"
 }
 
 // Define una instancia EC2 con ami Ubuntu
 resource "aws_instance" "servidor_1" {
-  ami                    = var.ubuntu_ami ["eu-east-1"]
+  ami                    = local.ami
   instance_type          = var.tipo_instancia
   subnet_id              = data.aws_subnet.az_a.id
   vpc_security_group_ids = [aws_security_group.mi_grupo_de_seguridad.id]
@@ -33,7 +38,7 @@ resource "aws_instance" "servidor_1" {
 }
 
 resource "aws_instance" "servidor_2" {
-  ami                    = var.ubuntu_ami["eu-east-1"]
+  ami                    = local.ami
   instance_type          = var.tipo_instancia
   subnet_id              = data.aws_subnet.az_b.id
   vpc_security_group_ids = [aws_security_group.mi_grupo_de_seguridad.id]
