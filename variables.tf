@@ -30,3 +30,16 @@ variable "ubuntu_ami" {
     eu-east-2 = "ami-0ab0629dba5ae551d" # Ubuntu en Ohio
   }
 }
+
+variable "servidores" {
+  description = "mapa de servidores con nombres y AZ"
+  type = map(object({
+    name = string,
+    az = string
+  }))
+
+  default = {
+    "srv-1" = {nombre = "servidor-1", az ="a"},
+    "srv-2" = {nombre = "servidor-2", az = "b"}
+  }
+}
